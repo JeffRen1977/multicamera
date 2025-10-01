@@ -235,34 +235,40 @@ class MultiCameraEvaluator:
     
     def create_evaluation_report(self, results: Dict[str, float], output_path: str):
         """Create a comprehensive evaluation report."""
+        # Convert numpy types to Python native types
+        def convert_to_native(value):
+            if hasattr(value, 'item'):
+                return float(value.item())
+            return float(value) if value else 0.0
+        
         report = {
             'summary': {
                 'method': 'Multi-Camera Fusion Evaluation',
                 'metrics_computed': len(results)
             },
             'image_quality_metrics': {
-                'psnr_fused_vs_wide': results.get('psnr_fused_vs_wide', 0),
-                'ssim_fused_vs_wide': results.get('ssim_fused_vs_wide', 0),
-                'lpips_fused_vs_wide': results.get('lpips_fused_vs_wide', 0),
-                'psnr_dz_vs_wide': results.get('psnr_dz_vs_wide', 0),
-                'ssim_dz_vs_wide': results.get('ssim_dz_vs_wide', 0),
-                'lpips_dz_vs_wide': results.get('lpips_dz_vs_wide', 0)
+                'psnr_fused_vs_wide': convert_to_native(results.get('psnr_fused_vs_wide', 0)),
+                'ssim_fused_vs_wide': convert_to_native(results.get('ssim_fused_vs_wide', 0)),
+                'lpips_fused_vs_wide': convert_to_native(results.get('lpips_fused_vs_wide', 0)),
+                'psnr_dz_vs_wide': convert_to_native(results.get('psnr_dz_vs_wide', 0)),
+                'ssim_dz_vs_wide': convert_to_native(results.get('ssim_dz_vs_wide', 0)),
+                'lpips_dz_vs_wide': convert_to_native(results.get('lpips_dz_vs_wide', 0))
             },
             'custom_metrics': {
-                'detail_transfer_score': results.get('detail_transfer_score', 0),
-                'ghost_score': results.get('ghost_score', 0),
-                'alignment_quality': results.get('alignment_quality', 0)
+                'detail_transfer_score': convert_to_native(results.get('detail_transfer_score', 0)),
+                'ghost_score': convert_to_native(results.get('ghost_score', 0)),
+                'alignment_quality': convert_to_native(results.get('alignment_quality', 0))
             }
         }
         
         if 'psnr_fused_vs_gt' in results:
             report['ground_truth_comparison'] = {
-                'psnr_fused_vs_gt': results.get('psnr_fused_vs_gt', 0),
-                'ssim_fused_vs_gt': results.get('ssim_fused_vs_gt', 0),
-                'lpips_fused_vs_gt': results.get('lpips_fused_vs_gt', 0),
-                'psnr_dz_vs_gt': results.get('psnr_dz_vs_gt', 0),
-                'ssim_dz_vs_gt': results.get('ssim_dz_vs_gt', 0),
-                'lpips_dz_vs_gt': results.get('lpips_dz_vs_gt', 0)
+                'psnr_fused_vs_gt': convert_to_native(results.get('psnr_fused_vs_gt', 0)),
+                'ssim_fused_vs_gt': convert_to_native(results.get('ssim_fused_vs_gt', 0)),
+                'lpips_fused_vs_gt': convert_to_native(results.get('lpips_fused_vs_gt', 0)),
+                'psnr_dz_vs_gt': convert_to_native(results.get('psnr_dz_vs_gt', 0)),
+                'ssim_dz_vs_gt': convert_to_native(results.get('ssim_dz_vs_gt', 0)),
+                'lpips_dz_vs_gt': convert_to_native(results.get('lpips_dz_vs_gt', 0))
             }
         
         # Save JSON report
@@ -326,3 +332,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+
