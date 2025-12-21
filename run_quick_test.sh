@@ -6,14 +6,21 @@ echo "🚀 Quick Multi-Camera Fusion Test"
 echo "=================================="
 echo ""
 
-# Activate virtual environment
+# Activate virtual environment (check parent directory first)
 if [ -z "$VIRTUAL_ENV" ]; then
-    if [ -f "venv/bin/activate" ]; then
+    if [ -f "../venv/bin/activate" ]; then
+        source ../venv/bin/activate
+        echo "✅ Virtual environment activated from parent directory"
+    elif [ -f "venv/bin/activate" ]; then
         source venv/bin/activate
         echo "✅ Virtual environment activated"
     else
         echo "❌ Virtual environment not found"
-        echo "Please run: python3 -m venv venv && source venv/bin/activate && pip install -r requirements.txt"
+        echo "Please run in parent directory:"
+        echo "  cd .."
+        echo "  python3 -m venv venv"
+        echo "  source venv/bin/activate"
+        echo "  pip install -r MultiCamera/requirements.txt"
         exit 1
     fi
 fi
@@ -21,13 +28,13 @@ fi
 # Check if sample data exists
 if [ ! -f "samples/sample_01/wide.jpg" ]; then
     echo "📸 Creating sample data..."
-    python multicam/create_sample_data.py --num_samples 1 --output samples
+    python chapter15/01_setup/create_sample_data.py --num_samples 1 --output samples
 fi
 
 # Run fusion
 echo ""
 echo "🔬 Running fusion..."
-python multicam/align_and_fuse.py \
+python chapter15/02_classical_method/align_and_fuse.py \
     --wide samples/sample_01/wide.jpg \
     --tele samples/sample_01/tele.jpg \
     --out results/quick_test

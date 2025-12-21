@@ -2,6 +2,8 @@
 
 **Welcome!** This guide will get you running multi-camera fusion experiments in minutes.
 
+> **Note**: All code is organized in the `chapter15/` directory. All commands assume you're in the `MultiCamera/` root directory with the virtual environment activated.
+
 ---
 
 ## 📚 Documentation Overview
@@ -24,7 +26,14 @@ We have **5 documentation files** to help you:
 ### Path 1: "Just show me results!" (30 seconds)
 
 ```bash
-python3 -m venv venv && source venv/bin/activate && pip install -r requirements.txt
+# Setup (one-time)
+python3 -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip install --upgrade pip
+pip install -r requirements.txt
+
+# Run quick test (make sure venv is activated)
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 ./run_quick_test.sh
 open results/quick_test/composite.png
 ```
@@ -41,10 +50,10 @@ open results/quick_test/composite.png
 source venv/bin/activate
 
 # Generate sample data
-python multicam/create_sample_data.py --num_samples 1
+python chapter15/01_setup/create_sample_data.py --num_samples 1
 
 # Run fusion with visualization
-python multicam/align_and_fuse.py \
+python chapter15/02_classical_method/align_and_fuse.py \
     --wide samples/sample_01/wide.jpg \
     --tele samples/sample_01/tele.jpg \
     --out results/learn \
@@ -65,7 +74,7 @@ open results/learn/composite.png  # See final comparison
 ```bash
 source venv/bin/activate
 
-python multicam/align_and_fuse.py \
+python chapter15/02_classical_method/align_and_fuse.py \
     --wide /path/to/your/wide_photo.jpg \
     --tele /path/to/your/tele_photo.jpg \
     --out results/my_photos \
@@ -88,7 +97,7 @@ open results/my_photos/composite.png
 ```bash
 source venv/bin/activate
 
-python multicam/compare_all_methods.py \
+python chapter15/05_evaluation/compare_all_methods.py \
     --wide samples/sample_01/wide.jpg \
     --tele samples/sample_01/tele.jpg \
     --output results/comparison
@@ -239,8 +248,8 @@ After successful quick test:
    - Find optimal settings for your use case
 
 4. **Compare methods**:
-   - Run DCSR: `bash multicam/run_dcsr.sh ...`
-   - Run ZoomGS: `bash multicam/run_zoomgs.sh ...`
+   - Run DCSR: `bash chapter15/03_dcsr_method/run_dcsr.sh ...`
+   - Run ZoomGS: `bash chapter15/04_zoomgs_method/run_zoomgs.sh ...`
    - Compare quantitative metrics
 
 5. **Use your own photos**:

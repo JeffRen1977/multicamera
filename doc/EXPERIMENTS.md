@@ -2,6 +2,8 @@
 
 This guide provides detailed experimental protocols for reproducing all results from the book chapter.
 
+> **Note**: All code is organized in the `chapter15/` directory. All commands assume you're in the `MultiCamera/` root directory with the virtual environment activated.
+
 ---
 
 ## 🔬 Experiment 1: Basic Dual-Camera Fusion
@@ -19,7 +21,7 @@ source venv/bin/activate
 
 **1. Create test data**:
 ```bash
-python multicam/create_sample_data.py --num_samples 1 --output samples
+python chapter15/01_setup/create_sample_data.py --num_samples 1 --output samples
 ```
 
 **Expected output**:
@@ -30,7 +32,7 @@ Sample dataset created in: samples
 
 **2. Run fusion algorithm**:
 ```bash
-python multicam/align_and_fuse.py \
+python chapter15/02_classical_method/align_and_fuse.py \
     --wide samples/sample_01/wide.jpg \
     --tele samples/sample_01/tele.jpg \
     --out results/exp1_basic \
@@ -50,7 +52,7 @@ Saved outputs to results/exp1_basic
 
 **3. Evaluate results**:
 ```bash
-python multicam/eval_multicam.py \
+python chapter15/05_evaluation/eval_multicam.py \
     --fused results/exp1_basic/fused.png \
     --wide results/exp1_basic/wide.png \
     --tele_warp results/exp1_basic/tele_warp.png \
@@ -89,13 +91,13 @@ python multicam/eval_multicam.py \
 for alpha in 0.5 0.7 1.0 1.3 1.5; do
     echo "Testing alpha=$alpha..."
     
-    python multicam/align_and_fuse.py \
+    python chapter15/02_classical_method/align_and_fuse.py \
         --wide samples/sample_01/wide.jpg \
         --tele samples/sample_01/tele.jpg \
         --out results/exp2_alpha_$alpha \
         --alpha $alpha
     
-    python multicam/eval_multicam.py \
+    python chapter15/05_evaluation/eval_multicam.py \
         --fused results/exp2_alpha_$alpha/fused.png \
         --wide results/exp2_alpha_$alpha/wide.png \
         --tele_warp results/exp2_alpha_$alpha/tele_warp.png \
@@ -155,21 +157,21 @@ WIDE="samples/sample_01/wide.jpg"
 TELE="samples/sample_01/tele.jpg"
 
 # Classical
-python multicam/align_and_fuse.py \
+python chapter15/02_classical_method/align_and_fuse.py \
     --wide $WIDE --tele $TELE --out results/exp3_classical
 
 # DCSR (if GPU available)
-bash multicam/run_dcsr.sh $WIDE $TELE results/exp3_dcsr
+bash chapter15/03_dcsr_method/run_dcsr.sh $WIDE $TELE results/exp3_dcsr
 
 # ZoomGS (if GPU available)
-bash multicam/run_zoomgs.sh $WIDE $TELE results/exp3_zoomgs
+bash chapter15/04_zoomgs_method/run_zoomgs.sh $WIDE $TELE results/exp3_zoomgs
 ```
 
 **2. Evaluate all methods**:
 ```bash
 for method in classical dcsr zoomgs; do
     if [ -f "results/exp3_$method/fused.png" ]; then
-        python multicam/eval_multicam.py \
+        python chapter15/05_evaluation/eval_multicam.py \
             --fused results/exp3_$method/fused.png \
             --wide $WIDE \
             --tele_warp results/exp3_$method/tele_warp.png \
@@ -252,14 +254,14 @@ cp /path/to/wide.jpg samples/real/
 cp /path/to/tele.jpg samples/real/
 
 # Run fusion
-python multicam/align_and_fuse.py \
+python chapter15/02_classical_method/align_and_fuse.py \
     --wide samples/real/wide.jpg \
     --tele samples/real/tele.jpg \
     --out results/exp4_real \
     --visualize
 
 # Evaluate
-python multicam/eval_multicam.py \
+python chapter15/05_evaluation/eval_multicam.py \
     --fused results/exp4_real/fused.png \
     --wide results/exp4_real/wide.png \
     --tele_warp results/exp4_real/tele_warp.png \
@@ -294,7 +296,7 @@ python multicam/eval_multicam.py \
 # Create sample with close subject
 # Or use real photo with subject <1 meter
 
-python multicam/align_and_fuse.py \
+python chapter15/02_classical_method/align_and_fuse.py \
     --wide samples/close_subject/wide.jpg \
     --tele samples/close_subject/tele.jpg \
     --out results/exp5_parallax
@@ -345,13 +347,13 @@ for sample in {01..03}; do
     for alpha in 0.7 1.0 1.3; do
         echo "Benchmark: sample_$sample, alpha=$alpha"
         
-        python multicam/align_and_fuse.py \
+        python chapter15/02_classical_method/align_and_fuse.py \
             --wide samples/sample_$sample/wide.jpg \
             --tele samples/sample_$sample/tele.jpg \
             --out results/benchmark/s${sample}_a${alpha} \
             --alpha $alpha
         
-        python multicam/eval_multicam.py \
+        python chapter15/05_evaluation/eval_multicam.py \
             --fused results/benchmark/s${sample}_a${alpha}/fused.png \
             --wide results/benchmark/s${sample}_a${alpha}/wide.png \
             --tele_warp results/benchmark/s${sample}_a${alpha}/tele_warp.png \
@@ -408,7 +410,7 @@ Import `benchmark_results.csv` into spreadsheet software for:
 source venv/bin/activate
 
 # Use automated comparison
-python multicam/compare_all_methods.py \
+python chapter15/compare_all_methods.py \
     --wide samples/sample_01/wide.jpg \
     --tele samples/sample_01/tele.jpg \
     --output results/exp7_comparison
@@ -418,24 +420,24 @@ python multicam/compare_all_methods.py \
 
 ```bash
 # Run each method
-python multicam/align_and_fuse.py \
+python chapter15/02_classical_method/align_and_fuse.py \
     --wide samples/sample_01/wide.jpg \
     --tele samples/sample_01/tele.jpg \
     --out results/exp7_classical
 
-bash multicam/run_dcsr.sh \
+bash chapter15/03_dcsr_method/run_dcsr.sh \
     samples/sample_01/wide.jpg \
     samples/sample_01/tele.jpg \
     results/exp7_dcsr
 
-bash multicam/run_zoomgs.sh \
+bash chapter15/04_zoomgs_method/run_zoomgs.sh \
     samples/sample_01/wide.jpg \
     samples/sample_01/tele.jpg \
     results/exp7_zoomgs
 
 # Evaluate all
 for method in classical dcsr zoomgs; do
-    python multicam/eval_multicam.py \
+    python chapter15/05_evaluation/eval_multicam.py \
         --fused results/exp7_$method/fused.png \
         --wide samples/sample_01/wide.jpg \
         --tele_warp results/exp7_$method/tele_warp.png \

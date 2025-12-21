@@ -2,15 +2,27 @@
 
 This guide gets you from zero to results in under 1 minute.
 
+> **Note**: 
+> - All code is organized in the `chapter15/` directory
+> - All commands assume you're in the `MultiCamera/` root directory
+> - The virtual environment is in the **parent directory** (one level above MultiCamera/)
+> - Activate it with: `cd .. && source venv/bin/activate && cd MultiCamera`
+
 ---
 
 ## ⚡ Super Quick (30 seconds)
 
 ```bash
 # One-time setup (if not done yet)
-python3 -m venv venv && source venv/bin/activate && pip install -r requirements.txt
+cd ..  # Go to parent directory (one level above MultiCamera/)
+python3 -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip install --upgrade pip
+pip install -r MultiCamera/requirements.txt
+cd MultiCamera  # Return to MultiCamera
 
-# Run everything
+# Run everything (make sure venv is activated from parent)
+cd .. && source venv/bin/activate && cd MultiCamera  # On Windows: cd .. && venv\Scripts\activate && cd MultiCamera
 ./run_quick_test.sh
 
 # View results
@@ -26,19 +38,22 @@ open results/quick_test/composite.png
 ### Step 1: Setup (10 seconds)
 
 ```bash
-source venv/bin/activate
+# Activate virtual environment from parent directory
+cd .. && source venv/bin/activate && cd MultiCamera  # On Windows: cd .. && venv\Scripts\activate && cd MultiCamera
+# You should see (venv) in your prompt
 ```
 
 ### Step 2: Generate Sample Data (3 seconds)
 
 ```bash
-python multicam/create_sample_data.py --num_samples 1
+# Make sure venv is activated (you should see (venv) in prompt)
+python chapter15/01_setup/create_sample_data.py --num_samples 1 --output samples
 ```
 
 ### Step 3: Run Fusion (1 second)
 
 ```bash
-python multicam/align_and_fuse.py \
+python chapter15/02_classical_method/align_and_fuse.py \
     --wide samples/sample_01/wide.jpg \
     --tele samples/sample_01/tele.jpg \
     --out results/my_first_experiment
@@ -56,8 +71,11 @@ cat results/my_first_experiment/*.png
 ## 📊 With Evaluation (90 seconds)
 
 ```bash
+# Make sure venv is activated
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
 # After running fusion above, evaluate:
-python multicam/eval_multicam.py \
+python chapter15/05_evaluation/eval_multicam.py \
     --fused results/my_first_experiment/fused.png \
     --wide results/my_first_experiment/wide.png \
     --tele_warp results/my_first_experiment/tele_warp.png \
@@ -78,10 +96,11 @@ cat results/my_first_experiment/metrics.json
 ## 🔄 Compare All Methods (2 minutes)
 
 ```bash
-source venv/bin/activate
+# Make sure venv is activated
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 
 # Automated comparison
-python multicam/compare_all_methods.py \
+python chapter15/05_evaluation/compare_all_methods.py \
     --wide samples/sample_01/wide.jpg \
     --tele samples/sample_01/tele.jpg \
     --output results/comparison
@@ -94,9 +113,10 @@ python multicam/compare_all_methods.py \
 ## 🎨 Use Your Own Photos
 
 ```bash
-source venv/bin/activate
+# Make sure venv is activated
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 
-python multicam/align_and_fuse.py \
+python chapter15/02_classical_method/align_and_fuse.py \
     --wide /path/to/your/wide.jpg \
     --tele /path/to/your/tele.jpg \
     --out results/my_photos \
@@ -114,17 +134,21 @@ python multicam/align_and_fuse.py \
 ## 🐛 If Something Goes Wrong
 
 ```bash
-# Check environment
-python --version  # Should be 3.9+
+# Make sure venv is activated
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 
-# Reinstall
+# Check environment
+python --version  # Should be 3.8+
+
+# Reinstall dependencies
+pip install --upgrade pip
 pip install -r requirements.txt
 
 # Try simple test
 ./run_quick_test.sh
 
-# Still broken? Try demo
-python demo.py
+# Still broken? Try complete workflow
+cd chapter15 && bash run_complete_workflow.sh && cd ..
 ```
 
 ---
@@ -153,11 +177,12 @@ If all checked, **you're ready to go!** 🎉
 
 ## 🎓 Next Steps
 
-1. ✅ Got basic fusion working → Try `./run_all.sh` for full pipeline
+1. ✅ Got basic fusion working → Try `cd chapter15 && bash run_complete_workflow.sh` for full pipeline
 2. ✅ Want to compare methods → See `USAGE.md` section on method comparison
 3. ✅ Have your own photos → Replace paths in commands above
 4. ✅ Want to understand algorithm → Read `README.md` Part II
 5. ✅ Ready for research → Read `README.md` Parts III-IV on DCSR and ZoomGS
+6. ✅ Want step-by-step tutorial → See `chapter15/02_classical_method/example_step_by_step.py`
 
 ---
 

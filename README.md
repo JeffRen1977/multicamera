@@ -23,21 +23,123 @@ This chapter provides a complete treatment of multi-camera fusion for computatio
 
 ---
 
+## 📁 Code Organization
+
+**All code for Chapter 15 is organized in the `chapter15/` directory**:
+
+```
+chapter15/
+├── README.md                    # Chapter overview and learning path
+├── 01_setup/                    # Setup and data preparation
+├── 02_classical_method/         # Classical CV approach (SIFT + RANSAC)
+├── 03_dcsr_method/              # Deep learning (DCSR)
+├── 04_zoomgs_method/            # 3D reconstruction (ZoomGS)
+├── 05_evaluation/               # Evaluation and comparison
+└── run_complete_workflow.sh     # Run everything in one command
+```
+
+**Start here**: `cd chapter15/` and follow the README for step-by-step learning!
+
+**All code is now in `chapter15/`** - organized by learning progression for easy understanding.
+
+---
+
 ## 🚀 Quick Start - Run Code Now!
 
-**Super Quick** (30 seconds):
+### Step 1: Setup Virtual Environment (One-time setup)
+
+**Important**: The virtual environment should be created in the **parent directory** (one level above `MultiCamera/`).
+
 ```bash
-python3 -m venv venv && source venv/bin/activate && pip install -r requirements.txt
+# Navigate to parent directory (one level above MultiCamera/)
+cd ..  # Go to parent directory
+
+# Create virtual environment in parent directory
+python3 -m venv venv
+# Or if you prefer a different name:
+# python3 -m venv virtual_env
+
+# Activate virtual environment
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+# You should see (venv) in your prompt
+
+# Install all dependencies
+pip install --upgrade pip
+pip install -r MultiCamera/requirements.txt
+
+# Return to MultiCamera directory
+cd MultiCamera
+```
+
+**Directory Structure After Setup**:
+```
+Parent_Directory/
+├── venv/                    # Virtual environment (created here)
+└── MultiCamera/             # Project directory
+    ├── chapter15/
+    ├── requirements.txt
+    └── ...
+```
+
+### Step 2: Run the Code
+
+**Option 1: Complete Workflow** (Recommended - runs everything):
+```bash
+# Activate virtual environment from parent directory
+cd ..  # Go to parent directory
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+cd MultiCamera  # Return to MultiCamera
+
+# Run complete workflow (script will automatically use venv Python)
+cd chapter15
+bash run_complete_workflow.sh
+cd ..
+```
+
+**Option 2: Step-by-Step** (Learn each section):
+```bash
+# Activate virtual environment from parent directory
+cd ..  # Go to parent directory
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+cd MultiCamera  # Return to MultiCamera
+
+# Step 1: Generate sample data
+python chapter15/01_setup/create_sample_data.py --num_samples 1 --output chapter15/data
+
+# Step 2: Run classical fusion
+python chapter15/02_classical_method/align_and_fuse.py \
+    --wide chapter15/data/sample_01/wide.jpg \
+    --tele chapter15/data/sample_01/tele.jpg \
+    --out chapter15/results/classical
+
+# Step 3: Evaluate results
+python chapter15/05_evaluation/eval_multicam.py \
+    --fused chapter15/results/classical/fused.png \
+    --wide chapter15/results/classical/wide.png \
+    --tele_warp chapter15/results/classical/tele_warp.png \
+    --digital_zoom chapter15/results/classical/digital_zoom.png \
+    --output chapter15/results/classical/metrics.json
+```
+
+**Option 3: Quick Test** (Minimal example):
+```bash
+# Activate virtual environment from parent directory
+cd ..  # Go to parent directory
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+cd MultiCamera  # Return to MultiCamera
+
+# Run quick test (script will automatically use venv Python)
 ./run_quick_test.sh
 ```
 
-**Comprehensive** (2 minutes):
-```bash
-source venv/bin/activate
-./run_all.sh  # Creates samples, runs fusion, evaluates, shows results
-```
+**For detailed instructions**: See [`chapter15/README.md`](chapter15/README.md), [`doc/QUICKSTART.md`](doc/QUICKSTART.md), [`doc/USAGE.md`](doc/USAGE.md), and [`doc/EXPERIMENTS.md`](doc/EXPERIMENTS.md)
 
-**For detailed instructions**: See [`QUICKSTART.md`](QUICKSTART.md), [`USAGE.md`](USAGE.md), and [`EXPERIMENTS.md`](EXPERIMENTS.md)
+> **Important Notes**: 
+> - **Virtual Environment Location**: The virtual environment must be in the **parent directory** (one level above `MultiCamera/`)
+> - **Working Directory**: All commands should be run from the `MultiCamera/` root directory
+> - **Activation Pattern**: Always activate venv with: `cd .. && source venv/bin/activate && cd MultiCamera`
+> - **Scripts**: All scripts (`run_quick_test.sh`, `run_all.sh`, `chapter15/run_complete_workflow.sh`) automatically detect and use the venv from the parent directory
+> - **Code Location**: All code is organized in the `chapter15/` directory by learning sections
 
 ---
 
@@ -48,16 +150,18 @@ This repository contains several documentation files:
 | File | Purpose | Who Should Read |
 |------|---------|----------------|
 | **README.md** (this file) | Complete book chapter with theory + practice | Everyone |
-| [`QUICKSTART.md`](QUICKSTART.md) | Get results in 60 seconds | First-time users |
-| [`USAGE.md`](USAGE.md) | Command reference and examples | Practitioners |
-| [`EXPERIMENTS.md`](EXPERIMENTS.md) | Detailed experimental protocols | Researchers |
+| [`doc/QUICKSTART.md`](doc/QUICKSTART.md) | Get results in 60 seconds | First-time users |
+| [`doc/USAGE.md`](doc/USAGE.md) | Command reference and examples | Practitioners |
+| [`doc/EXPERIMENTS.md`](doc/EXPERIMENTS.md) | Detailed experimental protocols | Researchers |
+| [`doc/SCRIPTS.md`](doc/SCRIPTS.md) | Script documentation | Developers |
+| [`doc/GETTING_STARTED.md`](doc/GETTING_STARTED.md) | Getting started guide | New users |
 
 **Scripts**:
 - `run_quick_test.sh` - Minimal test (30 sec)
 - `run_all.sh` - Complete pipeline (2 min)
 - `demo.py` - Python-based demo
-- `multicam/run_dcsr.sh` - DCSR integration
-- `multicam/run_zoomgs.sh` - ZoomGS integration
+- `chapter15/03_dcsr_method/run_dcsr.sh` - DCSR integration
+- `chapter15/04_zoomgs_method/run_zoomgs.sh` - ZoomGS integration
 
 ---
 
@@ -185,10 +289,12 @@ Our implementation consists of:
 
 ```
 MultiCamera/
-├── multicam/
-│   ├── align_and_fuse.py       # Classical approach
-│   ├── eval_multicam.py        # Evaluation metrics
-│   ├── create_sample_data.py   # Test data generation
+├── chapter15/                   # Chapter 15: All code organized by section
+│   ├── 01_setup/               # Setup and data preparation
+│   ├── 02_classical_method/    # Classical approach
+│   ├── 03_dcsr_method/         # Deep learning (DCSR)
+│   ├── 04_zoomgs_method/       # 3D reconstruction (ZoomGS)
+│   └── 05_evaluation/          # Evaluation and comparison
 │   ├── compare_all_methods.py  # Method comparison
 │   ├── run_dcsr.sh            # DCSR integration
 │   └── run_zoomgs.sh          # ZoomGS integration
@@ -266,24 +372,70 @@ mean_diff_color = 0.05-0.15   # 5-15% color shift
 
 ## 4. Project Setup and Installation
 
-### 4.1 Quick Start
+### 4.1 Prerequisites
 
+- Python 3.8 or higher
+- pip (Python package manager)
+- Git (for cloning repository)
+
+### 4.2 Installation Steps
+
+**Step 1: Clone the repository** (if not already done):
 ```bash
-# Clone and setup
 git clone <repository-url>
 cd MultiCamera
+```
 
-# Create virtual environment
+**Step 2: Create and activate virtual environment**:
+```bash
+# Go to parent directory (one level above MultiCamera/)
+cd ..  # Go to parent directory
+
+# Create virtual environment in the parent directory
 python3 -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
 
-# Install dependencies
+# Activate virtual environment
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+# On macOS/Linux, you should see (venv) in your prompt
+
+# Return to MultiCamera directory
+cd MultiCamera
+```
+
+**Step 3: Install dependencies**:
+```bash
+# Make sure venv is activated (you should see (venv) in prompt)
+# You should be in MultiCamera/ directory with venv activated from parent
 pip install --upgrade pip
 pip install -r requirements.txt
-
-# Run complete demo
-python demo.py
+# Or if you're still in parent directory:
+# pip install -r MultiCamera/requirements.txt
 ```
+
+**Step 4: Verify installation**:
+```bash
+python -c "import cv2, numpy, torch, lpips; print('✅ All dependencies installed!')"
+```
+
+**Step 5: Run a quick test**:
+```bash
+# Generate sample data
+python chapter15/01_setup/create_sample_data.py --num_samples 1 --output chapter15/data
+
+# Run fusion
+python chapter15/02_classical_method/align_and_fuse.py \
+    --wide chapter15/data/sample_01/wide.jpg \
+    --tele chapter15/data/sample_01/tele.jpg \
+    --out chapter15/results/test
+```
+
+> **Important**: The virtual environment is in the **parent directory** (one level above MultiCamera/). Always activate it before running any code:
+> ```bash
+> cd ..  # Go to parent directory
+> source venv/bin/activate  # On Windows: venv\Scripts\activate
+> cd MultiCamera  # Return to MultiCamera
+> ```
+> You should see `(venv)` in your terminal prompt when it's activated.
 
 ### 4.2 Dependencies
 
@@ -306,7 +458,11 @@ python -c "import cv2, numpy, torch, lpips; print('✅ Ready!')"
 ### 4.4 Generate Sample Data
 
 ```bash
-python multicam/create_sample_data.py --num_samples 3 --output samples
+# Make sure virtual environment is activated
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Generate sample data
+python chapter15/01_setup/create_sample_data.py --num_samples 3 --output samples
 ```
 
 **Output**:
@@ -586,7 +742,11 @@ def fuse_images(img_wide, img_tele_warped, alpha=1.0, beta=0.6):
 ### 9.1 Running the Classical Method
 
 ```bash
-python multicam/align_and_fuse.py \
+# Activate virtual environment (if not already activated)
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Run classical fusion method
+python chapter15/02_classical_method/align_and_fuse.py \
     --wide samples/sample_01/wide.jpg \
     --tele samples/sample_01/tele.jpg \
     --out results/experiment_01 \
@@ -616,7 +776,7 @@ results/experiment_01/
 
 ```python
 # Complete pipeline
-from multicam.align_and_fuse import multi_camera_fusion
+from chapter15.classical_method.align_and_fuse import multi_camera_fusion
 
 results = multi_camera_fusion(
     wide_path="samples/sample_01/wide.jpg",
@@ -783,7 +943,11 @@ Weights: λ₁=1.0, λ₂=0.01, λ₃=0.005, λ₄=0.1
 ### 13.1 Running DCSR
 
 ```bash
-bash multicam/run_dcsr.sh \
+# Activate virtual environment
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Run DCSR method
+bash chapter15/03_dcsr_method/run_dcsr.sh \
     samples/sample_01/wide.jpg \
     samples/sample_01/tele.jpg \
     results/dcsr
@@ -1012,7 +1176,11 @@ def render_zoom(gaussians, t):
 ### 16.3 Running ZoomGS
 
 ```bash
-bash multicam/run_zoomgs.sh \
+# Activate virtual environment
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Run ZoomGS method
+bash chapter15/04_zoomgs_method/run_zoomgs.sh \
     samples/sample_01/wide.jpg \
     samples/sample_01/tele.jpg \
     results/zoomgs
@@ -1158,7 +1326,11 @@ def alignment_quality(wide, tele_warp):
 ### 18.3 Running Evaluation
 
 ```bash
-python multicam/eval_multicam.py \
+# Activate virtual environment
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Run evaluation
+python chapter15/05_evaluation/eval_multicam.py \
     --fused results/experiment_01/fused.png \
     --wide results/experiment_01/wide.png \
     --tele_warp results/experiment_01/tele_warp.png \
@@ -1186,7 +1358,11 @@ Alignment Quality: 0.5014
 ### 19.1 Compare All Methods
 
 ```bash
-python multicam/compare_all_methods.py \
+# Activate virtual environment
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Compare all methods
+python chapter15/05_evaluation/compare_all_methods.py \
     --wide samples/sample_01/wide.jpg \
     --tele samples/sample_01/tele.jpg \
     --output results/comparison
@@ -1214,25 +1390,28 @@ results/comparison/
 ### 19.2 Manual Comparison Workflow
 
 ```bash
+# Activate virtual environment
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
 # Run all methods
-python multicam/align_and_fuse.py \
+python chapter15/02_classical_method/align_and_fuse.py \
     --wide samples/sample_01/wide.jpg \
     --tele samples/sample_01/tele.jpg \
     --out results/teaching
 
-bash multicam/run_dcsr.sh \
+bash chapter15/03_dcsr_method/run_dcsr.sh \
     samples/sample_01/wide.jpg \
     samples/sample_01/tele.jpg \
     results/dcsr
 
-bash multicam/run_zoomgs.sh \
+bash chapter15/04_zoomgs_method/run_zoomgs.sh \
     samples/sample_01/wide.jpg \
     samples/sample_01/tele.jpg \
     results/zoomgs
 
 # Evaluate each
 for method in teaching dcsr zoomgs; do
-    python multicam/eval_multicam.py \
+    python chapter15/05_evaluation/eval_multicam.py \
         --fused results/$method/fused.png \
         --wide samples/sample_01/wide.jpg \
         --tele_warp results/$method/tele_warp.png \
@@ -1251,11 +1430,14 @@ done
 
 **Fusion Strength (α)**:
 ```bash
+# Activate virtual environment
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
 # More telephoto detail (may introduce artifacts)
-python multicam/align_and_fuse.py --alpha 1.5 ...
+python chapter15/02_classical_method/align_and_fuse.py --alpha 1.5 ...
 
 # Less detail (safer, smoother)
-python multicam/align_and_fuse.py --alpha 0.7 ...
+python chapter15/02_classical_method/align_and_fuse.py --alpha 0.7 ...
 ```
 - Range: 0.5-2.0
 - Default: 1.0
@@ -1281,7 +1463,11 @@ low, high = decompose_frequency(image, sigma=5.0)
 ### 20.2 Testing on Your Own Images
 
 ```bash
-python multicam/align_and_fuse.py \
+# Activate virtual environment
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Run with your own images
+python chapter15/02_classical_method/align_and_fuse.py \
     --wide /path/to/your/wide.jpg \
     --tele /path/to/your/tele.jpg \
     --out results/my_photos \
@@ -1486,45 +1672,92 @@ Multi-camera fusion represents a fundamental shift in mobile photography, replac
 ### Command Cheatsheet
 
 ```bash
-# Setup
-python3 -m venv venv && source venv/bin/activate
-pip install -r requirements.txt
+# ============================================
+# ONE-TIME SETUP (do this first)
+# ============================================
+# Go to parent directory (one level above MultiCamera/)
+cd ..
 
-# Generate samples
-python multicam/create_sample_data.py --num_samples 3
+# Create and activate virtual environment
+python3 -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 
-# Run methods
-python multicam/align_and_fuse.py --wide W.jpg --tele T.jpg --out results/classical
-bash multicam/run_dcsr.sh W.jpg T.jpg results/dcsr
-bash multicam/run_zoomgs.sh W.jpg T.jpg results/zoomgs
+# Install dependencies
+pip install --upgrade pip
+pip install -r MultiCamera/requirements.txt
 
-# Evaluate
-python multicam/eval_multicam.py --fused F.png --wide W.png --tele_warp T.png --digital_zoom D.png
+# Return to MultiCamera
+cd MultiCamera
 
-# Compare all
-python multicam/compare_all_methods.py --wide W.jpg --tele T.jpg --output results/comparison
+# ============================================
+# DAILY USAGE (always activate venv first)
+# ============================================
+# Activate virtual environment from parent directory
+cd ..  # Go to parent directory
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+cd MultiCamera  # Return to MultiCamera
 
-# Demo (all-in-one)
-python demo.py
+# Generate sample data
+python chapter15/01_setup/create_sample_data.py --num_samples 3 --output samples
+
+# Run classical method
+python chapter15/02_classical_method/align_and_fuse.py \
+    --wide W.jpg --tele T.jpg --out results/classical
+
+# Run DCSR method
+bash chapter15/03_dcsr_method/run_dcsr.sh W.jpg T.jpg results/dcsr
+
+# Run ZoomGS method
+bash chapter15/04_zoomgs_method/run_zoomgs.sh W.jpg T.jpg results/zoomgs
+
+# Evaluate results
+python chapter15/05_evaluation/eval_multicam.py \
+    --fused F.png --wide W.png --tele_warp T.png --digital_zoom D.png \
+    --output metrics.json
+
+# Compare all methods
+python chapter15/05_evaluation/compare_all_methods.py \
+    --wide W.jpg --tele T.jpg --output results/comparison
+
+# Complete workflow (all-in-one)
+cd chapter15 && bash run_complete_workflow.sh && cd ..
 ```
+
+> **Remember**: 
+> - Virtual environment is in the **parent directory** (one level above MultiCamera/)
+> - Always activate it with: `cd .. && source venv/bin/activate && cd MultiCamera`
+> - You should see `(venv)` in your prompt when activated
+> - All scripts automatically detect and use the venv from parent directory
 
 ### File Structure Reference
 
 ```
-MultiCamera/
-├── multicam/                     # Core implementations
-│   ├── align_and_fuse.py        # Classical method
-│   ├── eval_multicam.py         # Evaluation
-│   ├── create_sample_data.py    # Data generation
-│   ├── compare_all_methods.py   # Comparison
-│   ├── run_dcsr.sh             # DCSR integration
-│   └── run_zoomgs.sh           # ZoomGS integration
-├── papers/                       # Reference papers
-│   ├── Dual-Camera Super-Resolution...pdf
-│   └── Dual-Camera Smooth Zoom...pdf
-├── demo.py                       # One-command demo
-├── requirements.txt              # Python dependencies
-└── README.md                     # This document
+Parent_Directory/
+├── venv/                         # Virtual environment (created during setup - HERE)
+└── MultiCamera/                  # Project root
+    ├── chapter15/                # Chapter 15: All implementations
+│   ├── 01_setup/                # Setup and data generation
+│   │   └── create_sample_data.py
+│   ├── 02_classical_method/     # Classical method
+│   │   ├── align_and_fuse.py
+│   │   └── example_step_by_step.py
+│   ├── 03_dcsr_method/          # DCSR deep learning
+│   │   └── run_dcsr.sh
+│   ├── 04_zoomgs_method/        # ZoomGS 3D reconstruction
+│   │   └── run_zoomgs.sh
+│   ├── 05_evaluation/           # Evaluation and comparison
+│   │   ├── eval_multicam.py
+│   │   └── compare_all_methods.py
+│   ├── data/                     # Generated sample data
+│   ├── results/                  # Output results
+│   └── run_complete_workflow.sh  # Complete workflow script
+    ├── papers/                   # Reference papers
+    │   ├── Dual-Camera Super-Resolution...pdf
+    │   └── Dual-Camera Smooth Zoom...pdf
+    ├── doc/                      # Documentation
+    ├── demo.py                   # One-command demo
+    ├── requirements.txt          # Python dependencies
+    └── README.md                 # This document
 ```
 
 ### Metric Interpretation Guide

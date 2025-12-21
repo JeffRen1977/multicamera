@@ -25,14 +25,17 @@ NC='\033[0m' # No Color
 # Check if virtual environment is activated
 if [ -z "$VIRTUAL_ENV" ]; then
     echo -e "${YELLOW}⚠️  Virtual environment not activated${NC}"
-    echo "Activating virtual environment..."
-    if [ -f "venv/bin/activate" ]; then
+    echo "Activating virtual environment from parent directory..."
+    if [ -f "../venv/bin/activate" ]; then
+        source ../venv/bin/activate
+    elif [ -f "venv/bin/activate" ]; then
         source venv/bin/activate
     else
-        echo -e "${RED}❌ Virtual environment not found. Please run:${NC}"
+        echo -e "${RED}❌ Virtual environment not found. Please run in parent directory:${NC}"
+        echo "   cd .."
         echo "   python3 -m venv venv"
         echo "   source venv/bin/activate"
-        echo "   pip install -r requirements.txt"
+        echo "   pip install -r MultiCamera/requirements.txt"
         exit 1
     fi
 fi
@@ -46,7 +49,7 @@ echo -e "${BLUE}Step 1: Generating Sample Data${NC}"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
 if [ ! -d "$SAMPLE_DIR/sample_01" ]; then
-    python multicam/create_sample_data.py \
+    python chapter15/01_setup/create_sample_data.py \
         --num_samples $NUM_SAMPLES \
         --output $SAMPLE_DIR
     echo -e "${GREEN}✅ Sample data created${NC}"
@@ -61,7 +64,7 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 echo -e "${BLUE}Step 2: Running Classical Fusion Method${NC}"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
-python multicam/align_and_fuse.py \
+python chapter15/02_classical_method/align_and_fuse.py \
     --wide $SAMPLE_DIR/sample_01/wide.jpg \
     --tele $SAMPLE_DIR/sample_01/tele.jpg \
     --out $RESULTS_DIR/classical_method \
@@ -76,7 +79,7 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 echo -e "${BLUE}Step 3: Evaluating Fusion Quality${NC}"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
-python multicam/eval_multicam.py \
+python chapter15/05_evaluation/eval_multicam.py \
     --fused $RESULTS_DIR/classical_method/fused.png \
     --wide $RESULTS_DIR/classical_method/wide.png \
     --tele_warp $RESULTS_DIR/classical_method/tele_warp.png \
@@ -122,9 +125,9 @@ echo ""
 echo "📌 Next Steps:"
 echo "   1. View results: open $RESULTS_DIR/classical_method/composite.png"
 echo "   2. Check metrics: cat $RESULTS_DIR/classical_method/evaluation.json"
-echo "   3. Run with your images: python multicam/align_and_fuse.py --wide YOUR_WIDE.jpg --tele YOUR_TELE.jpg"
-echo "   4. Compare methods: python multicam/compare_all_methods.py --wide W.jpg --tele T.jpg"
-echo "   5. Run DCSR: bash multicam/run_dcsr.sh W.jpg T.jpg results/dcsr"
-echo "   6. Run ZoomGS: bash multicam/run_zoomgs.sh W.jpg T.jpg results/zoomgs"
+    echo "   3. Run with your images: python chapter15/02_classical_method/align_and_fuse.py --wide YOUR_WIDE.jpg --tele YOUR_TELE.jpg"
+    echo "   4. Compare methods: python chapter15/05_evaluation/compare_all_methods.py --wide W.jpg --tele T.jpg"
+    echo "   5. Run DCSR: bash chapter15/03_dcsr_method/run_dcsr.sh W.jpg T.jpg results/dcsr"
+    echo "   6. Run ZoomGS: bash chapter15/04_zoomgs_method/run_zoomgs.sh W.jpg T.jpg results/zoomgs"
 echo ""
 

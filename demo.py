@@ -40,14 +40,14 @@ def main():
     print("This demo will create sample data and run fusion experiments.")
     
     # Check if we're in the right directory
-    if not Path("multicam/align_and_fuse.py").exists():
+    if not Path("chapter15/02_classical_method/align_and_fuse.py").exists():
         print("❌ Error: Please run this script from the MultiCamera root directory")
         sys.exit(1)
     
     # Step 1: Create sample data
     print("\n📸 Step 1: Creating sample data...")
     success = run_command([
-        "python", "multicam/create_sample_data.py",
+        "python", "chapter15/01_setup/create_sample_data.py",
         "--num_samples", "3",
         "--output", "samples"
     ], "Creating 3 sample dual-camera image pairs")
@@ -59,7 +59,7 @@ def main():
     # Step 2: Run teaching-level fusion
     print("\n🔬 Step 2: Running teaching-level fusion...")
     success = run_command([
-        "python", "multicam/align_and_fuse.py",
+        "python", "chapter15/02_classical_method/align_and_fuse.py",
         "--wide", "samples/sample_01/wide.jpg",
         "--tele", "samples/sample_01/tele.jpg",
         "--out", "results/demo_teaching",
@@ -73,7 +73,7 @@ def main():
     # Step 3: Evaluate results
     print("\n📊 Step 3: Evaluating fusion results...")
     success = run_command([
-        "python", "multicam/eval_multicam.py",
+        "python", "chapter15/05_evaluation/eval_multicam.py",
         "--fused", "results/demo_teaching/fused.png",
         "--wide", "samples/sample_01/wide.jpg",
         "--tele_warp", "results/demo_teaching/tele_warp.png",
@@ -120,8 +120,8 @@ def main():
     print("1. Check the results in the 'results/demo_teaching/' directory")
     print("2. View the composite.png for side-by-side comparison")
     print("3. Try different parameters with --alpha option")
-    print("4. Run SOTA methods with multicam/run_dcsr.sh or multicam/run_zoomgs.sh")
-    print("5. Use multicam/compare_all_methods.py for comprehensive comparison")
+    print("4. Run SOTA methods with chapter15/03_dcsr_method/run_dcsr.sh or chapter15/04_zoomgs_method/run_zoomgs.sh")
+    print("5. Use chapter15/05_evaluation/compare_all_methods.py for comprehensive comparison")
 
 
 if __name__ == "__main__":

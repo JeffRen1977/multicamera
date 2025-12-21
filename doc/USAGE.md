@@ -2,15 +2,21 @@
 
 This guide provides the essential commands to run all experiments.
 
+> **Note**: All code is organized in the `chapter15/` directory. All commands assume you're in the `MultiCamera/` root directory with the virtual environment activated.
+
 ---
 
 ## 🚀 Quick Start (3 Commands)
 
 ```bash
 # 1. Setup (one-time)
-python3 -m venv venv && source venv/bin/activate && pip install -r requirements.txt
+python3 -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip install --upgrade pip
+pip install -r requirements.txt
 
-# 2. Run quick test
+# 2. Run quick test (make sure venv is activated)
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 ./run_quick_test.sh
 
 # 3. View results
@@ -68,7 +74,7 @@ python -c "import cv2, numpy, torch, lpips; print('✅ All dependencies ready!')
 
 ```bash
 # Generate synthetic dual-camera image pairs
-python multicam/create_sample_data.py \
+python chapter15/01_setup/create_sample_data.py \
     --num_samples 3 \
     --output samples
 
@@ -80,13 +86,13 @@ python multicam/create_sample_data.py \
 
 ```bash
 # Basic usage
-python multicam/align_and_fuse.py \
+python chapter15/02_classical_method/align_and_fuse.py \
     --wide samples/sample_01/wide.jpg \
     --tele samples/sample_01/tele.jpg \
     --out results/experiment_01
 
 # With visualization and custom parameters
-python multicam/align_and_fuse.py \
+python chapter15/02_classical_method/align_and_fuse.py \
     --wide samples/sample_01/wide.jpg \
     --tele samples/sample_01/tele.jpg \
     --out results/experiment_01 \
@@ -115,7 +121,7 @@ results/experiment_01/
 #### Step 4: Evaluate Results
 
 ```bash
-python multicam/eval_multicam.py \
+python chapter15/05_evaluation/eval_multicam.py \
     --fused results/experiment_01/fused.png \
     --wide results/experiment_01/wide.png \
     --tele_warp results/experiment_01/tele_warp.png \
@@ -159,7 +165,7 @@ open results/experiment_01/metrics.csv
 ```bash
 source venv/bin/activate
 
-python multicam/align_and_fuse.py \
+python chapter15/02_classical_method/align_and_fuse.py \
     --wide samples/sample_01/wide.jpg \
     --tele samples/sample_01/tele.jpg \
     --out results/teaching \
@@ -177,7 +183,7 @@ python multicam/align_and_fuse.py \
 ```bash
 source venv/bin/activate
 
-bash multicam/run_dcsr.sh \
+bash chapter15/03_dcsr_method/run_dcsr.sh \
     samples/sample_01/wide.jpg \
     samples/sample_01/tele.jpg \
     results/dcsr
@@ -203,7 +209,7 @@ bash multicam/run_dcsr.sh \
 ```bash
 source venv/bin/activate
 
-bash multicam/run_zoomgs.sh \
+bash chapter15/04_zoomgs_method/run_zoomgs.sh \
     samples/sample_01/wide.jpg \
     samples/sample_01/tele.jpg \
     results/zoomgs
@@ -232,7 +238,7 @@ bash multicam/run_zoomgs.sh \
 ```bash
 source venv/bin/activate
 
-python multicam/compare_all_methods.py \
+python chapter15/05_evaluation/compare_all_methods.py \
     --wide samples/sample_01/wide.jpg \
     --tele samples/sample_01/tele.jpg \
     --output results/comparison
@@ -270,7 +276,7 @@ WIDE_IMAGE="/path/to/your/wide_photo.jpg"
 TELE_IMAGE="/path/to/your/tele_photo.jpg"
 
 # Run fusion
-python multicam/align_and_fuse.py \
+python chapter15/02_classical_method/align_and_fuse.py \
     --wide "$WIDE_IMAGE" \
     --tele "$TELE_IMAGE" \
     --out results/my_photos \
@@ -297,7 +303,7 @@ source venv/bin/activate
 for i in {01..03}; do
     echo "Processing sample_$i..."
     
-    python multicam/align_and_fuse.py \
+    python chapter15/02_classical_method/align_and_fuse.py \
         --wide samples/sample_$i/wide.jpg \
         --tele samples/sample_$i/tele.jpg \
         --out results/batch/sample_$i \
@@ -320,7 +326,7 @@ source venv/bin/activate
 
 # Test different alpha values
 for alpha in 0.5 0.7 1.0 1.3 1.5; do
-    python multicam/align_and_fuse.py \
+    python chapter15/02_classical_method/align_and_fuse.py \
         --wide samples/sample_01/wide.jpg \
         --tele samples/sample_01/tele.jpg \
         --out results/alpha_$alpha \
@@ -370,7 +376,7 @@ RuntimeError: Not enough matches: 5
 **Solution**: Image pair has insufficient features
 ```bash
 # Try different sample
-python multicam/align_and_fuse.py \
+python chapter15/02_classical_method/align_and_fuse.py \
     --wide samples/sample_02/wide.jpg \
     --tele samples/sample_02/tele.jpg \
     --out results/test
@@ -392,7 +398,7 @@ python multicam/align_and_fuse.py \
 mogrify -resize 50% samples/sample_01/*.jpg
 
 # Or process with CPU (slower)
-CUDA_VISIBLE_DEVICES="" python multicam/eval_multicam.py ...
+CUDA_VISIBLE_DEVICES="" python chapter15/05_evaluation/eval_multicam.py ...
 ```
 
 ---
@@ -449,7 +455,7 @@ MultiCamera/
 
 ```bash
 # Run with visualization
-python multicam/align_and_fuse.py \
+python chapter15/02_classical_method/align_and_fuse.py \
     --wide samples/sample_01/wide.jpg \
     --tele samples/sample_01/tele.jpg \
     --out results/exercise1 \
@@ -466,7 +472,7 @@ python multicam/align_and_fuse.py \
 ```bash
 # Test alpha values: 0.5, 1.0, 1.5
 for alpha in 0.5 1.0 1.5; do
-    python multicam/align_and_fuse.py \
+    python chapter15/02_classical_method/align_and_fuse.py \
         --wide samples/sample_01/wide.jpg \
         --tele samples/sample_01/tele.jpg \
         --out results/alpha_test_$alpha \
@@ -481,8 +487,8 @@ done
 ```bash
 # Run all three methods
 ./run_all.sh                                    # Classical
-bash multicam/run_dcsr.sh W.jpg T.jpg res/dcsr # DCSR
-bash multicam/run_zoomgs.sh W.jpg T.jpg res/zg  # ZoomGS
+bash chapter15/03_dcsr_method/run_dcsr.sh W.jpg T.jpg res/dcsr # DCSR
+bash chapter15/04_zoomgs_method/run_zoomgs.sh W.jpg T.jpg res/zg  # ZoomGS
 
 # Compare metrics
 cat results/*/evaluation.json
@@ -530,13 +536,13 @@ source venv/bin/activate && ./run_all.sh
 **For your own images**:
 ```bash
 source venv/bin/activate
-python multicam/align_and_fuse.py --wide YOUR_WIDE.jpg --tele YOUR_TELE.jpg --out results/mine
+python chapter15/02_classical_method/align_and_fuse.py --wide YOUR_WIDE.jpg --tele YOUR_TELE.jpg --out results/mine
 ```
 
 **To compare methods**:
 ```bash
 source venv/bin/activate
-python multicam/compare_all_methods.py --wide W.jpg --tele T.jpg --output results/comp
+python chapter15/05_evaluation/compare_all_methods.py --wide W.jpg --tele T.jpg --output results/comp
 ```
 
 ---

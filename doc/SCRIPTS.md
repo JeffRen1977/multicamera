@@ -2,6 +2,8 @@
 
 Complete reference for all runnable scripts in this project.
 
+> **Note**: All code is organized in the `chapter15/` directory. All commands assume you're in the `MultiCamera/` root directory with the virtual environment activated.
+
 ---
 
 ## 📜 Available Scripts
@@ -18,17 +20,17 @@ Complete reference for all runnable scripts in this project.
 
 | Script | Method | Time | GPU Required |
 |--------|--------|------|--------------|
-| `multicam/align_and_fuse.py` | Classical (teaching) | 1 sec | No |
-| `multicam/run_dcsr.sh` | DCSR (deep learning) | 5 sec | Recommended |
-| `multicam/run_zoomgs.sh` | ZoomGS (3D gaussian) | 8 sec | Yes |
+| `chapter15/02_classical_method/align_and_fuse.py` | Classical (teaching) | 1 sec | No |
+| `chapter15/03_dcsr_method/run_dcsr.sh` | DCSR (deep learning) | 5 sec | Recommended |
+| `chapter15/04_zoomgs_method/run_zoomgs.sh` | ZoomGS (3D gaussian) | 8 sec | Yes |
 
 ### 🛠️ Utility Scripts
 
 | Script | Purpose |
 |--------|---------|
-| `multicam/create_sample_data.py` | Generate synthetic test data |
-| `multicam/eval_multicam.py` | Evaluate fusion quality |
-| `multicam/compare_all_methods.py` | Compare all three methods |
+| `chapter15/01_setup/create_sample_data.py` | Generate synthetic test data |
+| `chapter15/05_evaluation/eval_multicam.py` | Evaluate fusion quality |
+| `chapter15/05_evaluation/compare_all_methods.py` | Compare all three methods |
 
 ---
 
@@ -105,13 +107,13 @@ python demo.py
 
 ---
 
-### `multicam/align_and_fuse.py`
+### `chapter15/align_and_fuse.py`
 
 **Purpose**: Main classical fusion algorithm
 
 **Usage**:
 ```bash
-python multicam/align_and_fuse.py \
+python chapter15/align_and_fuse.py \
     --wide WIDE.jpg \
     --tele TELE.jpg \
     --out OUTPUT_DIR \
@@ -139,7 +141,7 @@ OUTPUT_DIR/
 
 **Example**:
 ```bash
-python multicam/align_and_fuse.py \
+python chapter15/align_and_fuse.py \
     --wide samples/sample_01/wide.jpg \
     --tele samples/sample_01/tele.jpg \
     --out results/test1 \
@@ -149,13 +151,13 @@ python multicam/align_and_fuse.py \
 
 ---
 
-### `multicam/eval_multicam.py`
+### `chapter15/eval_multicam.py`
 
 **Purpose**: Comprehensive quality evaluation
 
 **Usage**:
 ```bash
-python multicam/eval_multicam.py \
+python chapter15/eval_multicam.py \
     --fused FUSED.png \
     --wide WIDE.png \
     --tele_warp TELE_WARPED.png \
@@ -184,7 +186,7 @@ python multicam/eval_multicam.py \
 
 **Example**:
 ```bash
-python multicam/eval_multicam.py \
+python chapter15/eval_multicam.py \
     --fused results/test1/fused.png \
     --wide results/test1/wide.png \
     --tele_warp results/test1/tele_warp.png \
@@ -196,13 +198,13 @@ python multicam/eval_multicam.py \
 
 ---
 
-### `multicam/create_sample_data.py`
+### `chapter15/create_sample_data.py`
 
 **Purpose**: Generate synthetic dual-camera test data
 
 **Usage**:
 ```bash
-python multicam/create_sample_data.py \
+python chapter15/create_sample_data.py \
     [--num_samples 5] \
     [--output samples] \
     [--realistic]
@@ -228,21 +230,21 @@ samples/
 **Examples**:
 ```bash
 # Create 3 synthetic samples
-python multicam/create_sample_data.py --num_samples 3
+python chapter15/create_sample_data.py --num_samples 3
 
 # Create realistic sample
-python multicam/create_sample_data.py --realistic
+python chapter15/create_sample_data.py --realistic
 ```
 
 ---
 
-### `multicam/run_dcsr.sh`
+### `chapter15/run_dcsr.sh`
 
 **Purpose**: Run DCSR (Dual-Camera Super-Resolution)
 
 **Usage**:
 ```bash
-bash multicam/run_dcsr.sh WIDE.jpg TELE.jpg OUTPUT_DIR
+bash chapter15/run_dcsr.sh WIDE.jpg TELE.jpg OUTPUT_DIR
 ```
 
 **Parameters**:
@@ -259,7 +261,7 @@ bash multicam/run_dcsr.sh WIDE.jpg TELE.jpg OUTPUT_DIR
 
 **Example**:
 ```bash
-bash multicam/run_dcsr.sh \
+bash chapter15/run_dcsr.sh \
     samples/sample_01/wide.jpg \
     samples/sample_01/tele.jpg \
     results/dcsr_output
@@ -275,13 +277,13 @@ bash multicam/run_dcsr.sh \
 
 ---
 
-### `multicam/run_zoomgs.sh`
+### `chapter15/run_zoomgs.sh`
 
 **Purpose**: Run ZoomGS (Dual-Camera Smooth Zoom)
 
 **Usage**:
 ```bash
-bash multicam/run_zoomgs.sh WIDE.jpg TELE.jpg OUTPUT_DIR
+bash chapter15/run_zoomgs.sh WIDE.jpg TELE.jpg OUTPUT_DIR
 ```
 
 **Parameters**:
@@ -299,7 +301,7 @@ bash multicam/run_zoomgs.sh WIDE.jpg TELE.jpg OUTPUT_DIR
 
 **Example**:
 ```bash
-bash multicam/run_zoomgs.sh \
+bash chapter15/run_zoomgs.sh \
     samples/sample_01/wide.jpg \
     samples/sample_01/tele.jpg \
     results/zoomgs_output
@@ -316,13 +318,13 @@ bash multicam/run_zoomgs.sh \
 
 ---
 
-### `multicam/compare_all_methods.py`
+### `chapter15/compare_all_methods.py`
 
 **Purpose**: Run and compare all three methods
 
 **Usage**:
 ```bash
-python multicam/compare_all_methods.py \
+python chapter15/compare_all_methods.py \
     --wide WIDE.jpg \
     --tele TELE.jpg \
     --output COMPARISON_DIR \
@@ -354,7 +356,7 @@ COMPARISON_DIR/
 
 **Example**:
 ```bash
-python multicam/compare_all_methods.py \
+python chapter15/compare_all_methods.py \
     --wide samples/sample_01/wide.jpg \
     --tele samples/sample_01/tele.jpg \
     --output results/full_comparison
@@ -384,13 +386,13 @@ cat results/classical_method/evaluation.json
 ```bash
 source venv/bin/activate
 
-python multicam/align_and_fuse.py \
+python chapter15/align_and_fuse.py \
     --wide YOUR_WIDE.jpg \
     --tele YOUR_TELE.jpg \
     --out results/mine \
     --visualize
 
-python multicam/eval_multicam.py \
+python chapter15/eval_multicam.py \
     --fused results/mine/fused.png \
     --wide results/mine/wide.png \
     --tele_warp results/mine/tele_warp.png \
@@ -403,7 +405,7 @@ python multicam/eval_multicam.py \
 ```bash
 source venv/bin/activate
 
-python multicam/compare_all_methods.py \
+python chapter15/compare_all_methods.py \
     --wide samples/sample_01/wide.jpg \
     --tele samples/sample_01/tele.jpg \
     --output results/comparison
@@ -418,7 +420,7 @@ source venv/bin/activate
 
 # Test different alpha values
 for alpha in 0.5 0.7 1.0 1.3 1.5; do
-    python multicam/align_and_fuse.py \
+    python chapter15/align_and_fuse.py \
         --wide samples/sample_01/wide.jpg \
         --tele samples/sample_01/tele.jpg \
         --out results/tune_alpha_$alpha \
@@ -469,7 +471,7 @@ python -c "import cv2, numpy, torch, lpips; print('OK')"
 
 # Check file paths
 ls -lh samples/sample_01/
-ls -lh multicam/
+ls -lh chapter15/
 
 # Clean start
 rm -rf results/* samples/*
