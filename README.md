@@ -51,28 +51,22 @@ chapter15/
 **Important**: The virtual environment should be created in the **parent directory** (one level above `MultiCamera/`).
 
 ```bash
-# Navigate to parent directory (one level above MultiCamera/)
-cd ..  # Go to parent directory
-
-# Create virtual environment in parent directory
-python3 -m venv virtual_env
+# Create virtual environment in the root folder (one level up)
+python3 -m venv ../virtual_env
 
 # Activate virtual environment
-source virtual_env/bin/activate  # On Windows: virtual_env\Scripts\activate
+source ../virtual_env/bin/activate  # On Windows: ..\virtual_env\Scripts\activate
 # You should see (virtual_env) in your prompt
 
 # Install all dependencies
 pip install --upgrade pip
-pip install -r MultiCamera/requirements.txt
-
-# Return to MultiCamera directory
-cd MultiCamera
+pip install -r requirements.txt
 ```
 
 **Directory Structure After Setup**:
 ```
 Parent_Directory/
-├── virtual_env/             # Virtual environment (created here)
+├── virtual_env/             # Shared virtual environment (in parent directory)
 └── MultiCamera/             # Project directory
     ├── chapter15/
     ├── requirements.txt
@@ -83,12 +77,10 @@ Parent_Directory/
 
 **Option 1: Complete Workflow** (Recommended - runs everything):
 ```bash
-# Activate virtual environment from parent directory
-cd ..  # Go to parent directory
-source virtual_env/bin/activate  # On Windows: virtual_env\Scripts\activate
-cd MultiCamera  # Return to MultiCamera
+# Activate virtual environment
+source ../virtual_env/bin/activate  # On Windows: ..\virtual_env\Scripts\activate
 
-# Run complete workflow (script will automatically use virtual_env Python)
+# Run complete workflow
 cd chapter15
 bash run_complete_workflow.sh
 cd ..
@@ -96,10 +88,8 @@ cd ..
 
 **Option 2: Step-by-Step** (Learn each section):
 ```bash
-# Activate virtual environment from parent directory
-cd ..  # Go to parent directory
-source virtual_env/bin/activate  # On Windows: virtual_env\Scripts\activate
-cd MultiCamera  # Return to MultiCamera
+# Activate virtual environment
+source ../virtual_env/bin/activate  # On Windows: ..\virtual_env\Scripts\activate
 
 # Step 1: Generate sample data
 python chapter15/01_setup/create_sample_data.py --num_samples 1 --output chapter15/data
@@ -121,12 +111,10 @@ python chapter15/05_evaluation/eval_multicam.py \
 
 **Option 3: Quick Test** (Minimal example):
 ```bash
-# Activate virtual environment from parent directory
-cd ..  # Go to parent directory
-source virtual_env/bin/activate  # On Windows: virtual_env\Scripts\activate
-cd MultiCamera  # Return to MultiCamera
+# Activate virtual environment
+source ../virtual_env/bin/activate  # On Windows: ..\virtual_env\Scripts\activate
 
-# Run quick test (script will automatically use virtual_env Python)
+# Run quick test
 ./run_quick_test.sh
 ```
 
@@ -135,7 +123,7 @@ cd MultiCamera  # Return to MultiCamera
 > **Important Notes**: 
 > - **Virtual Environment Location**: The virtual environment must be in the **parent directory** (one level above `MultiCamera/`)
 > - **Working Directory**: All commands should be run from the `MultiCamera/` root directory
-> - **Activation Pattern**: Always activate virtual_env with: `cd .. && source virtual_env/bin/activate && cd MultiCamera`
+> - **Activation Pattern**: Always activate virtual_env with: `source ../virtual_env/bin/activate`
 > - **Scripts**: All scripts (`run_quick_test.sh`, `run_all.sh`, `chapter15/run_complete_workflow.sh`) automatically detect and use the virtual_env from the parent directory
 > - **Code Location**: All code is organized in the `chapter15/` directory by learning sections
 
@@ -386,24 +374,18 @@ cd MultiCamera
 
 **Step 2: Create and activate virtual environment**:
 ```bash
-# Go to parent directory (one level above MultiCamera/)
-cd ..  # Go to parent directory
-
-# Create virtual environment in the parent directory
-python3 -m venv virtual_env
+# Create virtual environment in the root folder (one level up)
+python3 -m venv ../virtual_env
 
 # Activate virtual environment
-source virtual_env/bin/activate  # On Windows: virtual_env\Scripts\activate
-# On macOS/Linux, you should see (virtual_env) in your prompt
-
-# Return to MultiCamera directory
-cd MultiCamera
+source ../virtual_env/bin/activate  # On Windows: ..\virtual_env\Scripts\activate
+# You should see (virtual_env) in your prompt
 ```
 
 **Step 3: Install dependencies**:
 ```bash
 # Make sure virtual_env is activated (you should see (virtual_env) in prompt)
-# You should be in MultiCamera/ directory with virtual_env activated from parent
+# Make sure virtual_env is activated
 pip install --upgrade pip
 pip install -r requirements.txt
 # Or if you're still in parent directory:
@@ -429,9 +411,7 @@ python chapter15/02_classical_method/align_and_fuse.py \
 
 > **Important**: The virtual environment is in the **parent directory** (one level above MultiCamera/). Always activate it before running any code:
 > ```bash
-> cd ..  # Go to parent directory
-> source virtual_env/bin/activate  # On Windows: virtual_env\Scripts\activate
-> cd MultiCamera  # Return to MultiCamera
+> source ../virtual_env/bin/activate  # On Windows: ..\virtual_env\Scripts\activate
 > ```
 > You should see `(virtual_env)` in your terminal prompt when it's activated.
 
@@ -457,7 +437,7 @@ python -c "import cv2, numpy, torch, lpips; print('✅ Ready!')"
 
 ```bash
 # Make sure virtual environment is activated
-source virtual_env/bin/activate  # On Windows: virtual_env\Scripts\activate
+source ../virtual_env/bin/activate  # On Windows: ..\virtual_env\Scripts\activate
 
 # Generate sample data
 python chapter15/01_setup/create_sample_data.py --num_samples 3 --output samples
@@ -741,7 +721,7 @@ def fuse_images(img_wide, img_tele_warped, alpha=1.0, beta=0.6):
 
 ```bash
 # Activate virtual environment (if not already activated)
-source virtual_env/bin/activate  # On Windows: virtual_env\Scripts\activate
+source ../virtual_env/bin/activate  # On Windows: ..\virtual_env\Scripts\activate
 
 # Run classical fusion method
 python chapter15/02_classical_method/align_and_fuse.py \
@@ -942,7 +922,7 @@ Weights: λ₁=1.0, λ₂=0.01, λ₃=0.005, λ₄=0.1
 
 ```bash
 # Activate virtual environment
-source virtual_env/bin/activate  # On Windows: virtual_env\Scripts\activate
+source ../virtual_env/bin/activate  # On Windows: ..\virtual_env\Scripts\activate
 
 # Run DCSR method
 bash chapter15/03_dcsr_method/run_dcsr.sh \
@@ -1175,7 +1155,7 @@ def render_zoom(gaussians, t):
 
 ```bash
 # Activate virtual environment
-source virtual_env/bin/activate  # On Windows: virtual_env\Scripts\activate
+source ../virtual_env/bin/activate  # On Windows: ..\virtual_env\Scripts\activate
 
 # Run ZoomGS method
 bash chapter15/04_zoomgs_method/run_zoomgs.sh \
@@ -1325,7 +1305,7 @@ def alignment_quality(wide, tele_warp):
 
 ```bash
 # Activate virtual environment
-source virtual_env/bin/activate  # On Windows: virtual_env\Scripts\activate
+source ../virtual_env/bin/activate  # On Windows: ..\virtual_env\Scripts\activate
 
 # Run evaluation
 python chapter15/05_evaluation/eval_multicam.py \
@@ -1357,7 +1337,7 @@ Alignment Quality: 0.5014
 
 ```bash
 # Activate virtual environment
-source virtual_env/bin/activate  # On Windows: virtual_env\Scripts\activate
+source ../virtual_env/bin/activate  # On Windows: ..\virtual_env\Scripts\activate
 
 # Compare all methods
 python chapter15/05_evaluation/compare_all_methods.py \
@@ -1389,7 +1369,7 @@ results/comparison/
 
 ```bash
 # Activate virtual environment
-source virtual_env/bin/activate  # On Windows: virtual_env\Scripts\activate
+source ../virtual_env/bin/activate  # On Windows: ..\virtual_env\Scripts\activate
 
 # Run all methods
 python chapter15/02_classical_method/align_and_fuse.py \
@@ -1429,7 +1409,7 @@ done
 **Fusion Strength (α)**:
 ```bash
 # Activate virtual environment
-source virtual_env/bin/activate  # On Windows: virtual_env\Scripts\activate
+source ../virtual_env/bin/activate  # On Windows: ..\virtual_env\Scripts\activate
 
 # More telephoto detail (may introduce artifacts)
 python chapter15/02_classical_method/align_and_fuse.py --alpha 1.5 ...
@@ -1462,7 +1442,7 @@ low, high = decompose_frequency(image, sigma=5.0)
 
 ```bash
 # Activate virtual environment
-source virtual_env/bin/activate  # On Windows: virtual_env\Scripts\activate
+source ../virtual_env/bin/activate  # On Windows: ..\virtual_env\Scripts\activate
 
 # Run with your own images
 python chapter15/02_classical_method/align_and_fuse.py \
@@ -1673,26 +1653,20 @@ Multi-camera fusion represents a fundamental shift in mobile photography, replac
 # ============================================
 # ONE-TIME SETUP (do this first)
 # ============================================
-# Go to parent directory (one level above MultiCamera/)
-cd ..
-
-# Create and activate virtual environment
-python3 -m venv virtual_env
-source virtual_env/bin/activate  # On Windows: virtual_env\Scripts\activate
+# Create and activate virtual environment (from MultiCamera/ directory)
+python3 -m venv ../virtual_env
+source ../virtual_env/bin/activate  # On Windows: ..\virtual_env\Scripts\activate
 
 # Install dependencies
 pip install --upgrade pip
-pip install -r MultiCamera/requirements.txt
-
-# Return to MultiCamera
-cd MultiCamera
+pip install -r requirements.txt
 
 # ============================================
 # DAILY USAGE (always activate virtual_env first)
 # ============================================
 # Activate virtual environment from parent directory
 cd ..  # Go to parent directory
-source virtual_env/bin/activate  # On Windows: virtual_env\Scripts\activate
+source ../virtual_env/bin/activate  # On Windows: ..\virtual_env\Scripts\activate
 cd MultiCamera  # Return to MultiCamera
 
 # Generate sample data
