@@ -118,6 +118,12 @@ source ../virtual_env/bin/activate  # On Windows: ..\virtual_env\Scripts\activat
 ./run_quick_test.sh
 ```
 
+**Run Unit Tests**:
+```bash
+source ../virtual_env/bin/activate
+python3 -m pytest tests/ -v
+```
+
 **For detailed instructions**: See [`chapter15/README.md`](chapter15/README.md), [`doc/QUICKSTART.md`](doc/QUICKSTART.md), [`doc/USAGE.md`](doc/USAGE.md), and [`doc/EXPERIMENTS.md`](doc/EXPERIMENTS.md)
 
 > **Important Notes**: 
